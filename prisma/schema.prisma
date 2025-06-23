@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PROVIDER
+}
+
+model user {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  firstName String?
+  lastName  String?
+  email     String?
+  password  String?
+  role      Role    @default(PROVIDER)
+
+  providerId String?   @db.ObjectId
+  provider   provider? @relation(fields: [providerId], references: [id])
+}
+
+model device {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  code       String?
+  lastUpdate DateTime?
+
+  provider   provider? @relation(fields: [providerId], references: [id])
+  providerId String?   @db.ObjectId
+}
+
+model provider {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String?
+  logo String?
+
+  category   category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
+
+  allowDevicesToChangeProvider Boolean @default(true)
+
+  devices device[]
+  users   user[]
+
+  image    String?
+  schedule String[]
+}
+
+model category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String?
+  logo String?
+
+  providers provider[]
+}
