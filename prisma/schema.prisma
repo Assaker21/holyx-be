@@ -22,8 +22,8 @@ model user {
   password  String?
   role      Role    @default(PROVIDER)
 
-  providerId String?   @db.ObjectId
   provider   provider? @relation(fields: [providerId], references: [id])
+  providerId String?   @db.ObjectId
 }
 
 model device {
@@ -48,7 +48,8 @@ model provider {
   allowDevicesToChangeProvider Boolean @default(true)
 
   devices device[]
-  users   user[]
+
+  users user[]
 
   image    String?
   schedule String[]

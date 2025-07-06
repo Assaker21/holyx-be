@@ -1,21 +1,63 @@
 import { prisma } from "./prisma.service.js";
+import bcrypt from "bcrypt";
 
-export async function create(data) {
-  return prisma.user.create({ data });
-}
-export async function findAll() {
-  return prisma.user.findMany({
-    include: {
-      provider: true,
+export async function create(req, data) {
+  if (data.password) {
+    data.password = bcrypt.hashSync(data.password, 13);
+  } else {
+    delete data.password;
+  }
+
+  if (req.user.providerId) data.providerId = req.user.providerId;
+
+  return prisma.user.create({
+    data,
+    omit: {
+      password: true,
     },
   });
 }
-export async function findById(id) {
-  return prisma.user.findUnique({ where: { id } });
+export async function findAll(req) {
+  return prisma.user.findMany({
+    where: { providerId: req.user.providerId || undefined },
+    include: {
+      provider: true,
+    },
+    omit: {
+      password: true,
+    },
+  });
 }
-export async function update(id, d) {
-  return prisma.user.update({ where: { id }, data: d });
+export async function findById(req, id) {
+  return prisma.user.findUnique({
+    where: { id, providerId: req?.user?.providerId || undefined },
+    omit: {
+      password: true,
+    },
+  });
 }
-export async function remove(id) {
-  return prisma.user.delete({ where: { id } });
+export async function update(req, id, data) {
+  if (req.user.providerId) data.providerId = req.user.providerId;
+
+  if (data.password) {
+    data.password = bcrypt.hashSync(data.password, 13);
+  } else {
+    delete data.password;
+  }
+
+  return prisma.user.update({
+    where: { id, providerId: req.user.providerId || undefined },
+    data,
+    omit: {
+      password: true,
+    },
+  });
+}
+export async function remove(req, id) {
+  return prisma.user.delete({
+    where: { id, providerId: req.user.providerId || undefined },
+    omit: {
+      password: true,
+    },
+  });
 }
