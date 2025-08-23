@@ -8,7 +8,7 @@ export async function create(req, data) {
     delete data.password;
   }
 
-  if (req.user.providerId) data.providerId = req.user.providerId;
+  if (req.user?.providerId) data.providerId = req.user?.providerId;
 
   return prisma.user.create({
     data,
@@ -19,7 +19,7 @@ export async function create(req, data) {
 }
 export async function findAll(req) {
   return prisma.user.findMany({
-    where: { providerId: req.user.providerId || undefined },
+    where: { providerId: req.user?.providerId || undefined },
     include: {
       provider: true,
     },
@@ -37,7 +37,7 @@ export async function findById(req, id) {
   });
 }
 export async function update(req, id, data) {
-  if (req.user.providerId) data.providerId = req.user.providerId;
+  if (req.user?.providerId) data.providerId = req.user?.providerId;
 
   if (data.password) {
     data.password = bcrypt.hashSync(data.password, 13);
@@ -46,7 +46,7 @@ export async function update(req, id, data) {
   }
 
   return prisma.user.update({
-    where: { id, providerId: req.user.providerId || undefined },
+    where: { id, providerId: req.user?.providerId || undefined },
     data,
     omit: {
       password: true,
@@ -55,7 +55,7 @@ export async function update(req, id, data) {
 }
 export async function remove(req, id) {
   return prisma.user.delete({
-    where: { id, providerId: req.user.providerId || undefined },
+    where: { id, providerId: req.user?.providerId || undefined },
     omit: {
       password: true,
     },
