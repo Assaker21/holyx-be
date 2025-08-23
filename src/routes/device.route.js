@@ -15,7 +15,7 @@ router.get("/", auth, permit("ADMIN", "PROVIDER"), all);
 //router.get("/:id", byId);
 router.get("/:code", byCode);
 router.post("/", auth, permit("ADMIN"), create);
-router.put("/:id", auth, permit("ADMIN", "PROVIDER"), update);
+router.put("/:id", update);
 router.delete("/:id", auth, permit("ADMIN", "PROVIDER"), remove);
 
 export default router;
