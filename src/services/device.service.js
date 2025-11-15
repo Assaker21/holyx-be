@@ -45,7 +45,7 @@ export async function findById(req, id) {
   return device;
 }
 export async function findByCode(req, code) {
-  const device = prisma.device.findFirst({
+  const device = await prisma.device.findFirst({
     where: { code, providerId: req.user?.providerId || undefined },
     include: { provider: true },
   });
@@ -73,7 +73,6 @@ export async function findByCode(req, code) {
 
   device.dateNow = dateFormatter.format(now); // "2025-02-15"
   device.timeNow = timeFormatter.format(now); // "14:37:22"
-
   return device;
 }
 export async function update(req, id, data) {

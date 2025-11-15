@@ -33,5 +33,5 @@ app.use("/", authRoutes);
 app.use("/", (req, res) => res.send("Running"));
 
 app.listen(3000, () => {
-  console.log("Listening on 2188");
+  console.log("Listening on 3000");
 });
