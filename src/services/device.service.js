@@ -41,6 +41,8 @@ export async function findById(req, id) {
 
   device.dateNow = dateFormatter.format(now); // "2025-02-15"
   device.timeNow = timeFormatter.format(now); // "14:37:22"
+
+  return device;
 }
 export async function findByCode(req, code) {
   return prisma.device.findFirst({
